@@ -2,8 +2,8 @@ package vaccine;
 
 public class Vaccine {
   private String name;
-  private int total_doses;
-  private int gap;
+  public int total_doses;
+  public int gap;
   Vaccine (String _name, int _total, int _gap) {
     name = _name;
     total_doses = _total;

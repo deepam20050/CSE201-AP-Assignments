@@ -19,5 +19,6 @@ class Main {
       op = cin.nextInt();
       if (op == 8) break;
     }
+    cin.close();
   }
 }
