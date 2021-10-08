@@ -1,0 +1,49 @@
+below 18 should not be allowed
+no violation of duration btween slots
+citizen 12 digit given by user
+hospital 6 digit to be given by me
+no -ve numbers
+
+vaccine class :
+name, total doses required, gap between doses
+1. display vacc details ()
+-> vacc name
+-> # of doses
+-> gap 
+
+small slot class :
+day, quantity, vacc name
+
+
+hospital class :
+name, pincode, hospital id
+array of small slot classes
+
+1. display hospital details ()
+-> name
+-> pincode
+-> hospital id
+2. register hospital (name, pincode)
+-> creates new hospital()
+3. display all slots ()
+-> as func name
+4. 
+
+citizen class :
+name, age, citizen id, vaccination status
+vacc name, due date, # of doses taken
+required doses
+1. check vaccination status :
+-> display current vacc status
+-> due date (if partially vacc)
+-> # of doses given
+-> vacc given (name)
+2. update method
+
+slot class : 
+array of 
+array of pincode + hospital id
+array of vaccine + hospital id
+1. create slot (hospital id, # of slots) :
+-> for all slots create slot
+-> 
