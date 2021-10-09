@@ -5,7 +5,6 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
 import vaccine.*;
 
 public class Hospital {
@@ -13,11 +12,10 @@ public class Hospital {
   private int pincode;
   public int id;
   private HashMap < Integer, ArrayList < VaccineQuan > > slots;
-  Hospital (String _name, int _pincode) {
+  public Hospital (String _name, int _pincode, int _id) {
     name = _name;
     pincode = _pincode;
-    // random number generator taken from https://stackoverflow.com/a/363692
-    id = ThreadLocalRandom.current().nextInt(100000, 1000000);
+    id = _id;
     slots = new HashMap<>();
     System.out.println("Hospital Name: " + name + ", PinCode: " + pincode + ", Unique ID: " + id);
   }
@@ -35,9 +33,20 @@ public class Hospital {
       }
     }
   }
+  public boolean is_present (String vacc_name, int due) {
+    if (due == 0) return true;
+    for (Integer day : slots.keySet()) {
+      for (VaccineQuan x : slots.get(day)) {
+        if (x.quan > 0) {
+          if (vacc_name.equals(x.name) && due == day) return true;
+        }
+      }
+    }
+    return false;
+  }
   public VaccineQuan get_vacc (int slot) {
     int cnt = 0;
-    VaccineQuan ans;
+    VaccineQuan ans = new VaccineQuan(0, null, 0);
     for (Integer day : slots.keySet()) {
       for (VaccineQuan x : slots.get(day)) {
         if (x.quan > 0) {

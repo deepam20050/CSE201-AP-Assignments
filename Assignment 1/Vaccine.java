@@ -4,7 +4,7 @@ public class Vaccine {
   private String name;
   public int total_doses;
   public int gap;
-  Vaccine (String _name, int _total, int _gap) {
+  public Vaccine (String _name, int _total, int _gap) {
     name = _name;
     total_doses = _total;
     gap = _gap;

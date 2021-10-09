@@ -5,12 +5,12 @@ public class Citizen {
   private int age;
   public long id;
   private String vacc_status;
-  private String vacc;
-  private int due;
+  public String vacc;
+  public int due;
   private int taken;
   private int required;
   private final String[] s = new String[3];
-  Citizen (String _name, int _age, long _id) {
+  public Citizen (String _name, int _age, long _id) {
     name = _name;
     age = _age;
     id = _id;
@@ -22,7 +22,6 @@ public class Citizen {
     s[0] = "REGISTERED";
     s[1] = "PARTIALLY VACCINATED";
     s[2] = "FULLY VACCINATED";
-    System.out.println("Citizen Name: " + name + ", Age: " + age + ", Unique ID: " + id);
   }
   public void print_vacc_details () {
     System.out.println(vacc_status);
@@ -62,11 +61,13 @@ public class Citizen {
     if (req == 1) {
       vacc_status = s[2];
       required = 1;
+      vacc = vacc_name;
       System.out.println(name + " vaccinated with " + vacc_name);
       return true;
     }
     vacc_status = s[1];
     required = req;
+    vacc = vacc_name;
     due = day + gap_btwn;
     System.out.println(name + " vaccinated with " + vacc_name);
     return true;
