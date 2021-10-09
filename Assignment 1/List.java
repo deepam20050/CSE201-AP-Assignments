@@ -22,6 +22,34 @@ public class List {
     vacc_hosp = new HashMap<>();
     cin = input_method;
   }
+  public boolean check_citizen_id (long id) {
+    if (!ppl.containsKey(id)) {
+      System.out.println("Invalid patient ID!");
+      return false;
+    }
+    return true;
+  }
+  public boolean check_hospital_id (int id) {
+    if (!hosp.containsKey(id)) {
+      System.out.println("Invalid Hospital ID!");
+      return false;
+    }
+    return true;
+  }
+  public boolean check_pincode (int pincode) {
+    if (!pincode_hosp.containsKey(pincode)) {
+      System.out.println("Invalid pincode!");
+      return false;
+    }
+    return true;
+  }
+  public boolean check_vacc_name (String vacc_name) {
+    if (!vacc_hosp.containsKey(vacc_name)) {
+      System.out.println("No such vaccine exsits");
+      return false;
+    }
+    return true;
+  }
   public void add_citizen () {
     System.out.print("Citizen Name: ");
     String name = cin.next();
@@ -72,11 +100,13 @@ public class List {
   public void citizen_status () {
     System.out.print("Enter Patient ID: ");
     long id = cin.nextLong();
+    if (!check_citizen_id(id)) return;
     ppl.get(id).print_vacc_details();
   }
   public void hosp_slots () {
     System.out.print("Enter Hospital Id: ");
     int id = cin.nextInt();
+    if (!check_hospital_id(id)) return;
     hosp.get(id).show_slots(0);
   }
   public void show_vacc () {
@@ -99,6 +129,7 @@ public class List {
   public void create_slots () {
     System.out.print("Enter Hospital ID: ");
     int id = cin.nextInt();
+    if (!check_hospital_id(id)) return;
     System.out.print("Enter number of Slots to be added: ");
     int num_slots = cin.nextInt();
     while (num_slots > 0) {
@@ -110,6 +141,7 @@ public class List {
       show_vacc();
       int i = cin.nextInt();
       String vacc = get_ith_vaccine(i);
+      if (!check_vacc_name(vacc)) continue;
       hosp.get(id).update_slots(day, vacc, quan);
       if (!vacc_hosp.get(vacc).contains(id)) {
         vacc_hosp.get(vacc).add(id);
@@ -126,6 +158,7 @@ public class List {
   public void booking (long citizen_id) {
     System.out.print("Enter hospital id: ");
     int id = cin.nextInt();
+    if (!check_hospital_id(id)) return;
     if (!hosp.get(id).is_present(ppl.get(citizen_id).vacc, ppl.get(citizen_id).due)) {
       System.out.println("No slots available");
       return;
@@ -139,9 +172,26 @@ public class List {
       hosp.get(id).update_slots(what.day, what.name, -1);
     }
   }
+  public void booking_vac (long citizen_id, String vacc_name) {
+    System.out.print("Enter hospital id: ");
+    int id = cin.nextInt();
+    if (!hosp.get(id).is_present(ppl.get(citizen_id).vacc, ppl.get(citizen_id).due)) {
+      System.out.println("No slots available");
+      return;
+    }
+    hosp.get(id).show_slots_vacc(vacc_name);
+    System.out.print("Choose Slot: ");
+    int slot = cin.nextInt();
+    VaccineQuan what = hosp.get(id).get_vacc_name(slot, vacc_name);
+    boolean check = ppl.get(citizen_id).update(what.day, vac.get(what.name).total_doses, vac.get(what.name).gap, what.name);
+    if (check) {
+      hosp.get(id).update_slots(what.day, what.name, -1);
+    }
+  }
   public void by_pincode (long citizen_id) {
     System.out.print("Enter PinCode: ");
     int pincode = cin.nextInt();
+    if (!check_pincode(pincode)) return;
     show_hosp_by_pin(pincode);
     booking(citizen_id);
   }
@@ -153,12 +203,14 @@ public class List {
   public void by_vacc (long citizen_id) {
     System.out.print("Enter Vaccine name: ");
     String vacc_name = cin.next();
+    if (!check_vacc_name(vacc_name)) return;
     show_hosp_by_vacc(vacc_name);
-    booking(citizen_id);
+    booking_vac(citizen_id, vacc_name);
   }
   public void book_slot () {
     System.out.print("Enter patient Unique ID: ");
     long id = cin.nextLong();
+    if (!check_citizen_id(id)) return;
     System.out.print("1. Search by area\n2. Search by Vaccine\n3. Exit\nEnter option: ");
     int op = cin.nextInt();
     if (op == 3) {
@@ -166,8 +218,10 @@ public class List {
     }
     if (op == 1) {
       by_pincode(id);
-    } else {
+    } else if (op == 2) {
       by_vacc(id);
+    } else {
+      System.out.println("Invalid operation chosen!");
     }
   }
 }

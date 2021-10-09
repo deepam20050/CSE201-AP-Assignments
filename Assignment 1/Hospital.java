@@ -33,16 +33,28 @@ public class Hospital {
       }
     }
   }
-  public boolean is_present (String vacc_name, int due) {
-    if (due == 0) return true;
+  public void show_slots_vacc (String vacc_name) {
+    int cnt = 0;
     for (Integer day : slots.keySet()) {
       for (VaccineQuan x : slots.get(day)) {
-        if (x.quan > 0) {
-          if (vacc_name.equals(x.name) && due == day) return true;
+        if (x.quan > 0 && x.name.equals(vacc_name)) {
+          System.out.println(cnt + "-> Day: " + day + " Vaccine: " + x.name + " Available Qty: " + x.quan);
+          ++cnt;
         }
       }
     }
-    return false;
+  }
+  public VaccineQuan get_vacc_name (int slot, String vacc_name) {
+    int cnt = 0;
+    VaccineQuan ans = new VaccineQuan(0, null, 0);
+    for (Integer day : slots.keySet()) {
+      for (VaccineQuan x : slots.get(day)) {
+        if (x.quan > 0 && vacc_name.equals(x.name) && cnt == slot) {
+          ans = x;
+        }
+      }
+    }
+    return ans;
   }
   public VaccineQuan get_vacc (int slot) {
     int cnt = 0;
@@ -58,6 +70,17 @@ public class Hospital {
       }
     }
     return ans;
+  }
+  public boolean is_present (String vacc_name, int due) {
+    if (due == 0) return true;
+    for (Integer day : slots.keySet()) {
+      for (VaccineQuan x : slots.get(day)) {
+        if (x.quan > 0) {
+          if (vacc_name.equals(x.name) && due == day) return true;
+        }
+      }
+    }
+    return false;
   }
   public void update_slots (int day, String vacc, int quan) {
     if (!slots.containsKey(day)) {
