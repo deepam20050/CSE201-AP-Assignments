@@ -10,6 +10,7 @@ public class Citizen {
   private int taken;
   private int required;
   private final String[] s = new String[3];
+  
   public Citizen (String _name, int _age, long _id) {
     name = _name;
     age = _age;
@@ -33,6 +34,7 @@ public class Citizen {
       }
     }
   }
+
   public boolean update (int day, int req, int gap_btwn, String vacc_name) {
     if (vacc_status.equals(s[2])) {
       System.out.println("Citizen already FULLY VACCINATED");
@@ -43,7 +45,7 @@ public class Citizen {
         System.out.println(vacc + " was administered first. User wants to administer " + vacc_name + "! Not allowed !");
         return false;
       }
-      if (day != due) {
+      if (day < due) {
         System.out.println("Not in due date");
         return false;
       }

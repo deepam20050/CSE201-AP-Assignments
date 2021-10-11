@@ -12,6 +12,7 @@ public class Hospital {
   private int pincode;
   public int id;
   private HashMap < Integer, ArrayList < VaccineQuan > > slots;
+  
   public Hospital (String _name, int _pincode, int _id) {
     name = _name;
     pincode = _pincode;
@@ -19,6 +20,7 @@ public class Hospital {
     slots = new HashMap<>();
     System.out.println("Hospital Name: " + name + ", PinCode: " + pincode + ", Unique ID: " + id);
   }
+  
   public void show_slots (int what) {
     int cnt = 0;
     for (Integer day : slots.keySet()) {
@@ -49,8 +51,11 @@ public class Hospital {
     VaccineQuan ans = new VaccineQuan(0, null, 0);
     for (Integer day : slots.keySet()) {
       for (VaccineQuan x : slots.get(day)) {
-        if (x.quan > 0 && vacc_name.equals(x.name) && cnt == slot) {
-          ans = x;
+        if (x.quan > 0 && vacc_name.equals(x.name)) {
+          if (slot == cnt) {
+            ans = x;
+          }
+          ++cnt;
         }
       }
     }
@@ -72,29 +77,36 @@ public class Hospital {
     return ans;
   }
   public boolean is_present (String vacc_name, int due) {
-    if (due == 0) return true;
     for (Integer day : slots.keySet()) {
       for (VaccineQuan x : slots.get(day)) {
         if (x.quan > 0) {
-          if (vacc_name.equals(x.name) && due == day) return true;
+          if (due == 0) return true;
+          if (vacc_name.equals(x.name) && due <= day) return true;
         }
       }
     }
     return false;
   }
-  public void update_slots (int day, String vacc, int quan) {
+
+
+  public boolean update_slots (int day, String vacc, int quan) {
     if (!slots.containsKey(day)) {
       slots.put(day, new ArrayList < VaccineQuan > ());
     }
+    boolean ret = false;
     boolean ok = false;
     for (VaccineQuan x : slots.get(day)) {
       if (x.name.equals(vacc)) {
         ok = true;
         x.quan += quan;
+        if (x.quan == 0) {
+          ret = true;
+        }
       }
     }
     if (!ok) {
       slots.get(day).add(new VaccineQuan(day, vacc, quan));
     }
+    return ret;
   }
 }

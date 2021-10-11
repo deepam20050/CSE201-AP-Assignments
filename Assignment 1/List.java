@@ -14,6 +14,7 @@ public class List {
   private HashMap < String, ArrayList < Integer > > vacc_hosp;
   private int hospital_codes = 999999;
   private final Scanner cin;
+
   public List (Scanner input_method) {
     ppl = new HashMap<>();
     hosp = new HashMap<>();
@@ -22,6 +23,8 @@ public class List {
     vacc_hosp = new HashMap<>();
     cin = input_method;
   }
+  
+
   public boolean check_citizen_id (long id) {
     if (!ppl.containsKey(id)) {
       System.out.println("Invalid patient ID!");
@@ -45,19 +48,26 @@ public class List {
   }
   public boolean check_vacc_name (String vacc_name) {
     if (!vacc_hosp.containsKey(vacc_name)) {
-      System.out.println("No such vaccine exsits");
+      System.out.println("No such vaccine exists");
       return false;
     }
     return true;
   }
+
+  
   public void add_citizen () {
+    cin.nextLine();
     System.out.print("Citizen Name: ");
-    String name = cin.next();
+    String name = cin.nextLine();
     System.out.print("Age: ");
     int age = cin.nextInt();
     System.out.print("Unique ID: ");
     long id = cin.nextLong();
-    System.out.println("Citizen Name: " + name + ", Age: " + age + ", Unique ID: " + id);
+    if (ppl.containsKey(id)) {
+      System.out.println("Citizen with same ID already exists!");
+      return;
+    }
+    System.out.println("Citizen Name: " + name + ", Age: " + age + ", Unique ID: " + String.format("%012d", id));
     if (id < 0) {
       System.out.println("Invalid ID");
       return;
@@ -70,8 +80,9 @@ public class List {
     ppl.put(tmp.id, tmp);
   }
   public void add_hospital () {
+    cin.nextLine();
     System.out.print("Hospital Name: ");
-    String name = cin.next();
+    String name = cin.nextLine();
     System.out.print("PinCode: ");
     int pincode = cin.nextInt();
     Hospital tmp = new Hospital(name, pincode, hospital_codes--);
@@ -82,8 +93,13 @@ public class List {
     pincode_hosp.get(pincode).add(tmp.id);
   }
   public void add_vaccine () {
+    cin.nextLine();
     System.out.print("Vaccine Name: ");
-    String name = cin.next();
+    String name = cin.nextLine();
+    if (vac.containsKey(name)) {
+      System.out.println("Vaccine already registered!");
+      return;
+    }
     System.out.print("Number of Doses: ");
     int doses = cin.nextInt();
     if (doses == 1) {
@@ -97,18 +113,15 @@ public class List {
       vacc_hosp.put(name, new ArrayList<>());
     }
   }
+  
+  
   public void citizen_status () {
     System.out.print("Enter Patient ID: ");
     long id = cin.nextLong();
     if (!check_citizen_id(id)) return;
     ppl.get(id).print_vacc_details();
   }
-  public void hosp_slots () {
-    System.out.print("Enter Hospital Id: ");
-    int id = cin.nextInt();
-    if (!check_hospital_id(id)) return;
-    hosp.get(id).show_slots(0);
-  }
+
   public void show_vacc () {
     int i = 0;
     for (String name : vac.keySet()) {
@@ -125,6 +138,13 @@ public class List {
       ++idx;
     }
     return ans;
+  }
+
+  public void hosp_slots () {
+    System.out.print("Enter Hospital Id: ");
+    int id = cin.nextInt();
+    if (!check_hospital_id(id)) return;
+    hosp.get(id).show_slots(0);
   }
   public void create_slots () {
     System.out.print("Enter Hospital ID: ");
@@ -150,10 +170,15 @@ public class List {
       --num_slots;
     }
   }
-  public void show_hosp_by_pin (int pincode) {
+  
+  
+  public boolean show_hosp_by_pin (int pincode) {
+    boolean ok = false;
     for (Integer id : pincode_hosp.get(pincode)) {
+      ok = true;
       System.out.println(id + " " + hosp.get(id).name);
     }
+    return ok;
   }
   public void booking (long citizen_id) {
     System.out.print("Enter hospital id: ");
@@ -169,9 +194,25 @@ public class List {
     VaccineQuan what = hosp.get(id).get_vacc(slot);
     boolean check = ppl.get(citizen_id).update(what.day, vac.get(what.name).total_doses, vac.get(what.name).gap, what.name);
     if (check) {
-      hosp.get(id).update_slots(what.day, what.name, -1);
+      boolean zero = hosp.get(id).update_slots(what.day, what.name, -1);
+      if (zero) {
+        vacc_hosp.get(what.name).remove(Integer.valueOf(id));
+      }
     }
   }
+  public void by_pincode (long citizen_id) {
+    System.out.print("Enter PinCode: ");
+    int pincode = cin.nextInt();
+    if (!check_pincode(pincode)) return;
+    boolean ok = show_hosp_by_pin(pincode);
+    if (!ok) {
+      System.out.println("No hospitals available!");
+      return;
+    }
+    booking(citizen_id);
+  }
+
+
   public void booking_vac (long citizen_id, String vacc_name) {
     System.out.print("Enter hospital id: ");
     int id = cin.nextInt();
@@ -185,28 +226,34 @@ public class List {
     VaccineQuan what = hosp.get(id).get_vacc_name(slot, vacc_name);
     boolean check = ppl.get(citizen_id).update(what.day, vac.get(what.name).total_doses, vac.get(what.name).gap, what.name);
     if (check) {
-      hosp.get(id).update_slots(what.day, what.name, -1);
+      boolean zero = hosp.get(id).update_slots(what.day, what.name, -1);
+      if (zero) {
+        vacc_hosp.get(vacc_name).remove(Integer.valueOf(id));
+      }
     }
   }
-  public void by_pincode (long citizen_id) {
-    System.out.print("Enter PinCode: ");
-    int pincode = cin.nextInt();
-    if (!check_pincode(pincode)) return;
-    show_hosp_by_pin(pincode);
-    booking(citizen_id);
-  }
-  public void show_hosp_by_vacc (String vacc_name) {
+  public boolean show_hosp_by_vacc (String vacc_name) {
+    boolean ok = false;
     for (Integer id : vacc_hosp.get(vacc_name)) {
+      ok = true;
       System.out.println(id + " " + hosp.get(id).name);
     }
+    return ok;
   }
   public void by_vacc (long citizen_id) {
+    cin.nextLine();
     System.out.print("Enter Vaccine name: ");
-    String vacc_name = cin.next();
+    String vacc_name = cin.nextLine();
     if (!check_vacc_name(vacc_name)) return;
-    show_hosp_by_vacc(vacc_name);
+    boolean ok = show_hosp_by_vacc(vacc_name);
+    if (!ok) {
+      System.out.println("No hospitals available!");
+      return;
+    }
     booking_vac(citizen_id, vacc_name);
   }
+
+
   public void book_slot () {
     System.out.print("Enter patient Unique ID: ");
     long id = cin.nextLong();
