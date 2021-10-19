@@ -1,0 +1,18 @@
+assume 3 students and 2 instructors but implement
+in general case (use arraylist to add instances of
+student and instructor class)
+
+all comments till that point should be displayed
+
+use current system date and time
+
+For .mp4 => just the name of the file, and title is enough.
+
+instructors can do all operations of other instructor
+
+file name will be one word
+
+marks of quiz = 1
+
+no need to enter correct answer for instructor
+he just sees the answer given for the quiz and grades accordingly
