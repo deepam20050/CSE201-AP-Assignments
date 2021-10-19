@@ -14,7 +14,7 @@ public class Comment implements Materials {
     author = _author;
     date = _date;
   }
-
+  @Override
   public void print () {
     System.out.println(comment + " - " + author);
     System.out.println(date);

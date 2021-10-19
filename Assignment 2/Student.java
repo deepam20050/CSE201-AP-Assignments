@@ -49,7 +49,7 @@ public class Student implements CommonTasks, Materials {
     return submission.get(idx);
   }
   public boolean is_ungraded (int idx) {
-    return scores.get(idx) == 0;
+    return submission.get(idx) != null && by_who.get(idx) == null;
   }
   public boolean check_zip (String s) {
     return s.length() >= 4 && s.substring(s.length() - 4).equals(".zip");
@@ -90,12 +90,14 @@ public class Student implements CommonTasks, Materials {
     scores.set(idx, marks);
     by_who.set(idx, instructor_name);
   }
+  @Override
   public void print_menu () {
     System.out.print("1. View lecture materials\n2. View assessments\n3. Submit assessment\n4. View grades\n5. View comments\n6. Add comments\n7. Logout\n");
   }
   public void welcome () {
     System.out.println("Welcome " + name);
   }
+  @Override
   public void print () {
     System.out.println("Graded submissions");
     for (int i = 0; i < work.size(); ++i) {

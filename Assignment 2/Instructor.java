@@ -24,6 +24,7 @@ public class Instructor implements CommonTasks  {
     int id = cin.nextInt();
     all.close(id);
   }
+  @Override
   public void print_menu () {
     System.out.print("1. Add class material\n2. Add assessments\n3. View lecture materials\n4. View assessments\n5. Grade assessments\n6. Close assessment\n7. View comments\n8. Add comments\n9. Logout\n");
   }

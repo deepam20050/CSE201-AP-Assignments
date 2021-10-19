@@ -17,5 +17,5 @@ public interface CommonTasks {
   default void add_comment (Discuss x, String author) {
     x.add_c(author);
   }
-  void print_menu ();
+  public void print_menu ();
 }

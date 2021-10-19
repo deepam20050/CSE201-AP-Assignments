@@ -17,7 +17,7 @@ public class Slide implements Materials {
     date = _date;
     content = _content;
   }
-
+  @Override
   public void print () {
     System.out.println("Title: " + topic);
     for (int i = 1; i <= no_of_slides; ++i) {

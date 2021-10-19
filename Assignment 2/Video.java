@@ -16,6 +16,7 @@ public class Video implements Materials {
     date = _date;
   }
 
+  @Override
   public void print () {
     System.out.println("Title of video: " + topic);
     System.out.println("Video file: " + filename);
