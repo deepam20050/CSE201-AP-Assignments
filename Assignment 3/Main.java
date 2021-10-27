@@ -12,7 +12,7 @@ class Main {
     gg.play();
 
     /*
-      Kindly uncomment lines 18-20 and comment 9-12 to execute the added
+      Kindly uncomment lines 18-21 and comment 11-12 to execute the added
       functionality for the bonus part
     */
     // System.out.println("Enter number of floors you'd like the game to have");
