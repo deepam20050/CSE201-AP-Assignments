@@ -1,6 +1,3 @@
-# CSE201-AP-Assignments---Deepam-Sarmah--2020050
-This is my private Github repo containing all my CSE201-AP assignments
-
-Name - Deepam Sarmah
-Roll Number - 2020050
-Email ID - deepam20050@iiitd.ac.in
+[CSE201 - Advanced Programming](http://techtree.iiitd.edu.in/viewDescription/filename?=CSE201) assignments done by me
+- [Deepam Sarmah](mailto:deepam20050@iiitd.ac.in)
+- 2020050
